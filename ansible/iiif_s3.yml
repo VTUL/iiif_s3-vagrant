@@ -1,0 +1,25 @@
+---
+- name: install prerequisites for Ruby iiif_s3 gem
+  hosts: all
+  user: "{{ ansible_user }}"
+  vars:
+    apt_cache_timeout: 1800
+    dependent_packages: 
+    - git
+    - imagemagick
+    - ruby
+    - ruby-bundler
+  gather_facts: true
+  tasks:
+  - name: install apt dependencies
+    apt:
+      name: '{{ dependent_packages }}'
+      state: present
+      cache_valid_time: '{{ apt_cache_timeout }}'
+      update_cache: yes
+  - name: install iiif_s3 gem system-wide
+    gem:
+      name: iiif_s3
+      user_install: no
+      state: present
+  become: yes
